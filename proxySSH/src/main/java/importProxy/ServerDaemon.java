@@ -54,8 +54,7 @@ public class ServerDaemon {
 
                     iosvc.setIoServiceEventListener(new IoServiceEventListener() {
                         @Override
-                        public void connectionAccepted(IoAcceptor acceptor, SocketAddress local, SocketAddress remote,
-                                                       SocketAddress service) throws IOException {
+                        public void connectionAccepted(IoAcceptor acceptor, SocketAddress local, SocketAddress remote, SocketAddress service) throws IOException {
                             logger.info(String.format(" ---------------- %d. connectionAccepted", ++(ServerDaemon.step)));
                             IoServiceEventListener.super.connectionAccepted(acceptor, local, remote, service);
                         }
