@@ -1,0 +1,6 @@
+*.class
+
+### Gradle ###
+.gradle
+**/build/
+!src/**/build/
