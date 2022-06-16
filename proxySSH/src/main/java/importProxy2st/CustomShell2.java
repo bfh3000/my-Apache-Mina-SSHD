@@ -21,15 +21,15 @@ import java.util.HexFormat;
 import java.util.Map;
 import java.util.Objects;
 
-public class CustomShell2st extends AbstractLoggingBean implements InvertedShell {
-    private static final Logger logger = LogManager.getLogger(CustomShell2st.class);
+public class CustomShell2 extends AbstractLoggingBean implements InvertedShell {
+    private static final Logger logger = LogManager.getLogger(CustomShell2.class);
 
     private ServerSession session;
     private ChannelSession channelSession;
     private TtyFilterOutputStream in;
     private TtyFilterInputStream out;
     private TtyFilterInputStream err;
-    private ClientDaemon2st client;
+    private ClientDaemon2 client;
     private OutputStream cin;
     private ByteArrayOutputStream cout;
 
@@ -39,7 +39,7 @@ public class CustomShell2st extends AbstractLoggingBean implements InvertedShell
     private ByteArrayOutputStream rawin = new ByteArrayOutputStream();
     private ByteArrayInputStream rawerr = new ByteArrayInputStream(errbuf);
 
-    public CustomShell2st(ClientDaemon2st client) {
+    public CustomShell2(ClientDaemon2 client) {
         this.client = client;
         this.cin = client.channel.getInvertedIn();
         this.cout = client.out;

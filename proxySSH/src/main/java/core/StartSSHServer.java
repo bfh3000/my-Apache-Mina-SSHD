@@ -9,15 +9,14 @@ import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.shell.InteractiveProcessShellFactory;
-
 import java.io.IOException;
 
-public class StartSSHServer {
+public class StartSSHServer extends Thread {
 
-    private static Logger log = LogManager.getLogger();
+    private static Logger log=LogManager.getLogger();
 
-    public static void main(String[] args) {
-
+    @Override
+    public void run() {
         SshServer sshd = SshServer.setUpDefaultServer();
         sshd.setHost("192.168.5.171");
         sshd.setPort(2022);
@@ -27,7 +26,7 @@ public class StartSSHServer {
                     @Override
                     public boolean authenticate(String username, String password, ServerSession session) throws PasswordChangeRequiredException, AsyncAuthException {
 
-                    return true;
+                        return true;
                     }
                 }
 

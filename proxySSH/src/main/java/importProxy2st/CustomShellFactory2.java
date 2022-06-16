@@ -21,21 +21,26 @@ import java.util.List;
  *
  * @author <a href="mailto:dev@mina.apache.org">Apache MINA SSHD Project</a>
  */
-public class CustomShellFactory2st extends AbstractLoggingBean implements ShellFactory {
-    private static final Logger logger = LogManager.getLogger(CustomShellFactory2st.class);
+public class CustomShellFactory2 extends AbstractLoggingBean implements ShellFactory {
+    private static final Logger logger = LogManager.getLogger(CustomShellFactory2.class);
 
     private String command;
     private List<String> elements;
     public InvertedShell _shell;
-    public ClientDaemon2st _client;
+    public ClientDaemon2 _client;
 
-    public CustomShellFactory2st(ClientDaemon2st client) {
+    public CustomShellFactory2() {
+    }
+
+    public void setClient(ClientDaemon2 client) {
         this._client = client;
     }
+
 
     /**
      * @return The original unparsed raw command
      */
+
     public String getCommand() {
         return command;
     }
@@ -64,6 +69,6 @@ public class CustomShellFactory2st extends AbstractLoggingBean implements ShellF
     }
 
     protected InvertedShell createInvertedShell(ChannelSession channel) {
-        return new CustomShell2st(this._client);
+        return new CustomShell2(this._client);
     }
 }

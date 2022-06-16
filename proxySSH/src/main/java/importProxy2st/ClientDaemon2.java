@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
 
-public class ClientDaemon2st implements Runnable {
-    private static final Logger logger = LogManager.getLogger(ClientDaemon2st.class);
+public class ClientDaemon2 implements Runnable {
+    private static final Logger logger = LogManager.getLogger(ClientDaemon2.class);
     public SshClient client;
     public ClientSession session;
     public AuthFuture auth;
@@ -27,9 +27,9 @@ public class ClientDaemon2st implements Runnable {
     public ByteArrayInputStream in = new ByteArrayInputStream(buf);
     public ByteArrayOutputStream out = new ByteArrayOutputStream();
     public ByteArrayOutputStream err = new ByteArrayOutputStream();
-    public CustomShell2st shell;
+    public CustomShell2 shell;
 
-    public void setShell(CustomShell2st shell) {
+    public void setShell(CustomShell2 shell) {
         this.shell = shell;
     }
 
