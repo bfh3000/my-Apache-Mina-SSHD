@@ -61,7 +61,7 @@ public class CustomShell extends AbstractLoggingBean implements InvertedShell {
     public ChannelSession getServerChannelSession() {
         return channelSession;
     }
-    
+
     @Override
     public void start(ChannelSession channel, Environment env) throws IOException {
         this.channelSession = channel;

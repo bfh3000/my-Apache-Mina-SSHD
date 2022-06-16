@@ -1,17 +1,7 @@
-package importProxy;
+package importProxy2st;
 
-import importProxy2st.ClientDaemon2;
-import importProxy2st.CustomShellFactory2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.sshd.common.AttributeRepository;
-import org.apache.sshd.common.io.*;
-import org.apache.sshd.common.kex.KexProposalOption;
-import org.apache.sshd.common.session.ConnectionService;
-import org.apache.sshd.common.session.ReservedSessionMessagesHandler;
-import org.apache.sshd.common.session.Session;
-import org.apache.sshd.common.session.SessionListener;
-import org.apache.sshd.common.util.buffer.Buffer;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.AsyncAuthException;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
@@ -20,9 +10,6 @@ import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.ServerSession;
 
 import java.io.IOException;
-import java.net.SocketAddress;
-import java.util.List;
-import java.util.Map;
 
 public class ServerDaemon2 {
     private static final Logger logger = LogManager.getLogger(ServerDaemon2.class);
@@ -43,20 +30,30 @@ public class ServerDaemon2 {
                 public boolean authenticate(String username, String password, ServerSession session)
                         throws PasswordChangeRequiredException, AsyncAuthException {
 
+                    // C12345678 9자리
+                    String destIP = "";
+                    if(username.substring(0, 9).equals("C12345678")){
+                        destIP = "192.168.5.102";
+                        username = "root";
+                        password = "1234";
+                    }
+                    else if(username.substring(0, 9).equals("C11111111")){
+                        destIP = "192.168.0.201";
+                        username = "root";
+                        password = "201sac201";
+                    }
 
                     client = new ClientDaemon2();
 
                     try {
-                        client.create();
+                        client.create(destIP, username, password);
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.exit(1);
                     }
 
                     CustomShellFactory2 shellFactory = new CustomShellFactory2();
-
                     shellFactory.setClient(client);
-
                     sshd.setShellFactory(shellFactory);
                     return true;
                 }

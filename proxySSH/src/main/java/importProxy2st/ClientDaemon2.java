@@ -33,18 +33,18 @@ public class ClientDaemon2 implements Runnable {
         this.shell = shell;
     }
 
-    public void create() throws IOException {
+    public void create(String destIP, String username, String passwd) throws IOException {
         client = SshClient.setUpDefaultClient();
         client.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE);
         client.start();
 
         ConnectFuture conSync = client
-            .connect("192.168.5.102:22")
+            .connect(destIP+":22")
             .verify(5000);
 
         session = conSync.getSession();
-        session.setUsername("root");
-        session.addPasswordIdentity("1234");
+        session.setUsername(username);
+        session.addPasswordIdentity(passwd);
 
         auth = session
             .auth()
