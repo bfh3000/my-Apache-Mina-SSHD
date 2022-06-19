@@ -9,11 +9,12 @@ import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.shell.InteractiveProcessShellFactory;
+
 import java.io.IOException;
 
 public class StartSSHServer extends Thread {
 
-    private static Logger log=LogManager.getLogger();
+    private static Logger log = LogManager.getLogger();
 
     @Override
     public void run() {
@@ -29,7 +30,6 @@ public class StartSSHServer extends Thread {
                         return true;
                     }
                 }
-
         );
 
         sshd.setShellFactory(new InteractiveProcessShellFactory());

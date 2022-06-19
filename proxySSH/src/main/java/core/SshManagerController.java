@@ -1,14 +1,17 @@
 package core;
 
-public class SshManagerController {
-    public static void main(String[] args) {
-        StartSSHServer sshd = new StartSSHServer();
-        sshd.start();
+public class SshManagerController extends Thread {
+    public static void main(String[] args) throws InterruptedException {
+        
+        //start SShdServer
+//        StartSSHServer sshS = new StartSSHServer();
+//        sshS.start();
 
-//        StartSSHClient sshc = new StartSSHClient();
-//        sshc.start();
+        StartSSHClient sshC = new StartSSHClient();
+        sshC.start();
 
-
-
+        while(true){
+            Thread.sleep(10000);
+        }
     }
 }

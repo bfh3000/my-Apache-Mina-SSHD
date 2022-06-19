@@ -28,6 +28,8 @@ import org.apache.sshd.common.channel.Channel;
 public class StartSSHClient extends Thread {
     private static Logger log = LogManager.getLogger();
 
+
+
     @Override
     public void run() {
         SshClient client = SshClient.setUpDefaultClient();
