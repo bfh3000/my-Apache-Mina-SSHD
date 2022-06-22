@@ -10,8 +10,8 @@ import org.apache.sshd.server.shell.InteractiveProcessShellFactory;
 
 import java.io.IOException;
 
-public class ThreadTest {
-    public static void main(String[] args) throws IOException {
+public class ThreadTest extends Thread {
+    public static void main(String[] args) throws InterruptedException {
         SshServer sshd = SshServer.setUpDefaultServer();
         sshd.setHost("192.168.5.171");
         sshd.setPort(2022);
@@ -32,6 +32,10 @@ public class ThreadTest {
             sshd.start();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        while(true){
+            Thread.sleep(10000);
         }
 
     }

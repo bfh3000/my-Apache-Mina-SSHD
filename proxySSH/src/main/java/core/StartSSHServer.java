@@ -1,5 +1,7 @@
 package core;
 
+import importProxy2st.ClientDaemon2;
+import importProxy2st.CustomShellFactory2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sshd.server.SshServer;
@@ -26,6 +28,33 @@ public class StartSSHServer extends Thread {
                 new PasswordAuthenticator() {
                     @Override
                     public boolean authenticate(String username, String password, ServerSession session) throws PasswordChangeRequiredException, AsyncAuthException {
+
+                        // C12345678 9자리
+                        String destIP = "";
+                        if(username.substring(0, 9).equals("C12345678")){
+                            destIP = "192.168.5.102";
+                            username = "root";
+                            password = "1234";
+                        }
+                        else if(username.substring(0, 9).equals("C11111111")){
+                            destIP = "192.168.0.201";
+                            username = "root";
+                            password = "201sac201";
+                        }
+
+                        StartSSHClient client = new StartSSHClient(destIP, username, password);
+
+                        try {
+                            client.create();
+                            client.start();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+
+//                        CustomShellFactory2 shellFactory = new CustomShellFactory2();
+//                        shellFactory.setClient(client);
+//                        sshd.setShellFactory(shellFactory);
 
                         return true;
                     }

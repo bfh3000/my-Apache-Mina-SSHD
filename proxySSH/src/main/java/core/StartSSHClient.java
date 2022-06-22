@@ -1,8 +1,10 @@
 package core;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -12,90 +14,89 @@ import org.apache.logging.log4j.Logger;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;
 import org.apache.sshd.client.channel.ClientChannelEvent;
+import org.apache.sshd.client.future.AuthFuture;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.channel.Channel;
 
 
-/**
- * 1. Client Setting Start
- * 2. Client Session Start
- * 3. Client Session Auth
- * 4. Success Session to Create ClientChannel
- * 5. ClientChannel open verify
- * 6. inputStream outputStream mappings
- */
-
 public class StartSSHClient extends Thread {
     private static Logger log = LogManager.getLogger();
 
+    /**
+     * ConnectionInfo
+     *
+     * */
+    public static String DEST_IP = "";
+    public static String USER_NAME = "";
+    public static String PASSWORD = "";
 
+    public SshClient client;
+    public ClientSession session;
+    public AuthFuture auth;
+    public ClientChannel channel;
+
+    public byte[] buf = new byte[8192];
+    public ByteArrayInputStream inputStream = new ByteArrayInputStream(buf);
+    public ByteArrayOutputStream responseStream=new ByteArrayOutputStream();
+    public ByteArrayOutputStream errorStream=new ByteArrayOutputStream();
+
+    StartSSHClient(String destIP, String username, String password){
+        this.DEST_IP = destIP;
+        this.USER_NAME = username;
+        this.PASSWORD = password;
+    }
 
     @Override
     public void run() {
-        SshClient client = SshClient.setUpDefaultClient();
+        OutputStream pipedIn = channel.getInvertedIn();
+
+        log.debug(new String(responseStream.toByteArray()));
+
+//        while(!session.getSessionState().equals(ClientSession.ClientSessionEvent.CLOSED)){
+        while(true){
+            try {
+                pipedIn.write(("ip ad"+" \n").getBytes());
+                pipedIn.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            log.debug("===============================================================");
+            log.debug(new String(responseStream.toByteArray(), StandardCharsets.UTF_8));
+            log.debug("===============================================================");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void create() throws IOException{
+        client = SshClient.setUpDefaultClient();
         client.start();
 
-        ClientSession session;
         try{
-            session=client.connect("root","192.168.5.102",22).verify(60,TimeUnit.SECONDS).getSession();
-        }catch(IOException e){
-            throw new RuntimeException(e);
-        }
-        session.addPasswordIdentity("1234");
-        try{
+            session=client.connect(USER_NAME, DEST_IP,22).verify(60,TimeUnit.SECONDS).getSession();
+
+            session.addPasswordIdentity(PASSWORD);
             session.auth().verify(60,TimeUnit.SECONDS);
         }catch(IOException e){
             throw new RuntimeException(e);
         }
 
-        ClientChannel channel=null;
         try{
             channel=session.createChannel(Channel.CHANNEL_SHELL);
         }catch(IOException e){
             throw new RuntimeException(e);
         }
-        ByteArrayOutputStream responseStream=new ByteArrayOutputStream();
-        ByteArrayOutputStream errorStream=new ByteArrayOutputStream();
 
+        channel.setIn(inputStream);
         channel.setOut(responseStream);
         channel.setErr(errorStream);
+        channel.open().verify(60,TimeUnit.SECONDS);
 
-        try{
-            channel.open().verify(60,TimeUnit.SECONDS);
-
-            //shell
-            OutputStream pipedIn=channel.getInvertedIn();
-
-            pipedIn.write("ls\n".getBytes());
-            pipedIn.flush();
-
-            //Channel Thread
-            channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED),TimeUnit.SECONDS.toMillis(3));
-
-            String error=new String(errorStream.toByteArray());
-            log.debug(new String(responseStream.toByteArray()));
-
-            Scanner scan=new Scanner(System.in);
-
-            while(!session.getSessionState().equals(ClientSession.ClientSessionEvent.CLOSED)){
-                String msg=scan.nextLine();
-
-                pipedIn.write((msg+" \n").getBytes());
-                pipedIn.flush();
-
-                System.out.println("");
-                log.debug(new String(responseStream.toByteArray()));
-                System.out.println("");
-            }
-
-            if(!error.isEmpty()){
-                throw new Exception(error);
-            }
-        }catch(Exception e){
-            throw new RuntimeException(e);
-        }finally{
-            channel.close(false);
-        }
+        channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED),TimeUnit.SECONDS.toMillis(10));
     }
 }
 

@@ -75,7 +75,8 @@ public class CustomShell2 extends AbstractLoggingBean implements InvertedShell {
             public int data(ChannelSession channel, byte[] buf, int start, int len) throws IOException {
                 String stringified = new String(Arrays.copyOfRange(buf, start, start + len));
                 String hex = HexFormat.ofDelimiter(" ").formatHex(stringified.getBytes(StandardCharsets.UTF_8));
-                logger.info(" <<<<<<<< DATA: " + new String(Arrays.copyOfRange(buf, start, start + len)) + " (" + hex + ")", StandardCharsets.UTF_8);
+                String msg = new String(Arrays.copyOfRange(buf, start, start + len));
+                logger.info(" <<<<<<<< DATA: " + msg);
 
                 cin.write(stringified.getBytes(StandardCharsets.UTF_8));
                 cin.flush();

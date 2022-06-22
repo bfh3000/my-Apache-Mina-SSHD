@@ -70,7 +70,8 @@ public class ClientDaemon2 implements Runnable {
         while (this.client != null && this.client.isOpen()) {
             try {
                 if (0 < out.size()) {
-                    logger.info(" >>>>>>>> OUTPUT: " + new String(out.toByteArray(), StandardCharsets.UTF_8));
+                    String msg = new String(out.toByteArray(), StandardCharsets.UTF_8);
+                    logger.info(" >>>>>>>> OUTPUT: ");
 
                     if (this.shell != null) {
                         shell.getInputStream().write(out.toByteArray());
