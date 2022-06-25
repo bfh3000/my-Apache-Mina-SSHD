@@ -12,6 +12,14 @@ import java.io.IOException;
 
 public class InteractiveShellFactory extends AbstractLoggingBean implements ShellFactory {
 
+    public void setSession(){
+
+    }
+
+    InteractiveShellFactory(){
+
+    }
+
     @Override
     public Command createShell(ChannelSession channel) throws IOException {
         InvertedShell shell = createInvertedShell(channel);

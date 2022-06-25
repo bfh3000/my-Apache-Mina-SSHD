@@ -32,7 +32,7 @@ public class ServerDaemon2 {
 
                     // C12345678 9자리
                     String destIP = "";
-                    if(username.substring(0, 9).equals("C12345678")){
+                    if(username.substring(0, 9).equals("C12345678root")){
                         destIP = "192.168.5.102";
                         username = "root";
                         password = "1234";
