@@ -9,6 +9,7 @@ import org.apache.sshd.common.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.EnumSet;
@@ -28,6 +29,9 @@ public class ClienttestSample extends Thread {
         session.auth().verify(60, TimeUnit.SECONDS);
 
         //Create Client Channel
+//        byte[] buf = new byte[8192];
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(buf);
+//        channel.setIn(inputStream);
         ClientChannel channel = session.createChannel(Channel.CHANNEL_SHELL);
         ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
         ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
