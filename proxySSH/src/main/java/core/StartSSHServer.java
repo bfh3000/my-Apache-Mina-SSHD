@@ -15,9 +15,14 @@ import java.io.IOException;
 public class StartSSHServer{
 
     private static Logger log = LogManager.getLogger();
-    private SshServer sshd;
-
+    /*private SshServer sshd;
     public SshServer getSshd() {
+        return sshd;
+    }*/
+
+    public CloneSshServer sshd;
+
+    public CloneSshServer getSshd() {
         return sshd;
     }
 
@@ -31,7 +36,7 @@ public class StartSSHServer{
 
 
     public void startListen() throws IOException {
-        sshd = SshServer.setUpDefaultServer();
+        sshd = CloneSshServer.setUpDefaultServer();
         sshd.setHost("192.168.5.171");
         sshd.setPort(2022);
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
@@ -56,7 +61,6 @@ public class StartSSHServer{
                         }
 
                         ShellFactory tmp = session.getFactoryManager().getShellFactory();
-
 //                        session.getFactoryManager().addSessionListener();
 
 //                        CustomShellFactory2 shellFactory = new CustomShellFactory2();

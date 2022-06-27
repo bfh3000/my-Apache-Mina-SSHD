@@ -12,9 +12,16 @@ import java.io.IOException;
 public class InteractiveShellFactory implements ShellFactory {
     private static Logger log = LogManager.getLogger();
 
+
+    public InteractiveShell shell;
+
+    public InteractiveShell getShell() {
+        return shell;
+    }
+
     @Override
     public Command createShell(ChannelSession channel) throws IOException {
-        InteractiveShell shell = new InteractiveShell(channel);
+        shell = new InteractiveShell(channel);
         return new InvertedShellWrapper(shell);
     }
 }

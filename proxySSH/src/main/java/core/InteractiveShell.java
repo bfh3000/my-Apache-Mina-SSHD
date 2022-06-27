@@ -93,9 +93,9 @@ public class InteractiveShell implements InvertedShell {
         err = new TtyFilterInputStream(process.getErrorStream(), modes);
         in = new TtyFilterOutputStream(process.getOutputStream(), err, modes);
 
-        String commandG = "hi";
+        /*String commandG = "hi";
         in.write(commandG.getBytes(), 0, commandG.length());
-        in.flush();
+        in.flush();*/
     }
 
     protected Map<String, String> resolveShellEnvironment(Map<String, String> env) {

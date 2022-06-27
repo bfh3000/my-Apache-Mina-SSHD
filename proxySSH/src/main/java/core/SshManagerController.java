@@ -26,10 +26,12 @@ public class SshManagerController extends Thread {
 
             count++;
             if(tmp.size()>0 && count >= 5){
-
+                String commandG = "hi";
+                s.getSshd().getShellFactory().getShell().getInputStream().write(commandG.getBytes(), 0, commandG.length());
+                s.getSshd().getShellFactory().getShell().getInputStream().flush();
             }
         }
-        
+
 
         /*StartSSHClient client = new StartSSHClient("192.168.5.102", "root", "1234");
         client.create();
