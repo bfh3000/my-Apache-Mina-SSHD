@@ -2,23 +2,24 @@ package core;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.sshd.common.session.helpers.AbstractSession;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.AsyncAuthException;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.ServerSession;
-import org.apache.sshd.server.shell.InteractiveProcessShellFactory;
-import org.apache.sshd.server.shell.ProcessShellFactory;
+import org.apache.sshd.server.shell.ShellFactory;
 
 import java.io.IOException;
-import java.util.List;
 
-public class StartSSHServer extends Thread {
+public class StartSSHServer{
 
     private static Logger log = LogManager.getLogger();
     private SshServer sshd;
+
+    public SshServer getSshd() {
+        return sshd;
+    }
 
     public String USERNAME = "";
     public String PASSWORD = "";
@@ -29,12 +30,14 @@ public class StartSSHServer extends Thread {
     public String getTARGET_REMOTE_IP() {return TARGET_REMOTE_IP;}
 
 
-    public void create(){
+    public void startListen() throws IOException {
         sshd = SshServer.setUpDefaultServer();
         sshd.setHost("192.168.5.171");
         sshd.setPort(2022);
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-        sshd.setShellFactory(new InteractiveProcessShellFactory());
+
+        sshd.setShellFactory(new InteractiveShellFactory()); //내꺼
+//        sshd.setShellFactory(new ProcessShellFactory("cmd.exe", "/K", "ipconfig")); // 기존 코드
         sshd.setPasswordAuthenticator(
                 new PasswordAuthenticator() {
                     @Override
@@ -52,6 +55,8 @@ public class StartSSHServer extends Thread {
                             PASSWORD = "201sac201";
                         }
 
+                        ShellFactory tmp = session.getFactoryManager().getShellFactory();
+
 //                        session.getFactoryManager().addSessionListener();
 
 //                        CustomShellFactory2 shellFactory = new CustomShellFactory2();
@@ -62,27 +67,6 @@ public class StartSSHServer extends Thread {
                     }
                 }
         );
-
+        sshd.start();
     }
-
-    @Override
-    public void run() {
-        try {
-            this.sshd.start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        while (true){
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-//    public List<AbstractSession> getSessionList(){
-//        return sshd.getActiveSessions();
-//    }
 }
