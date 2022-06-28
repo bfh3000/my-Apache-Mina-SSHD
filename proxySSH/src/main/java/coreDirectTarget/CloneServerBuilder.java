@@ -1,4 +1,4 @@
-package core;
+package coreDirectTarget;
 
 import org.apache.sshd.common.BaseBuilder;
 import org.apache.sshd.common.NamedFactory;
@@ -14,7 +14,6 @@ import org.apache.sshd.common.kex.extension.DefaultServerKexExtensionHandler;
 import org.apache.sshd.common.kex.extension.KexExtensionHandler;
 import org.apache.sshd.common.session.ConnectionService;
 import org.apache.sshd.common.signature.Signature;
-import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.keyboard.DefaultKeyboardInteractiveAuthenticator;
 import org.apache.sshd.server.auth.keyboard.KeyboardInteractiveAuthenticator;
 import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;

@@ -1,4 +1,4 @@
-package core;
+package coreOneByOne;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 
-public class InteractiveShell implements InvertedShell {
+public class InteractiveShellRe implements InvertedShell {
     private static Logger log = LogManager.getLogger();
 
 //    private String command = "";
@@ -34,7 +34,7 @@ public class InteractiveShell implements InvertedShell {
     private TtyFilterInputStream out;
     private TtyFilterInputStream err;
 
-    public InteractiveShell(ChannelSession channel){
+    public InteractiveShellRe(ChannelSession channel){
         this.channelSession = channel;
         command.add("cmd.exe");
         command.add("/K");
@@ -92,10 +92,6 @@ public class InteractiveShell implements InvertedShell {
         out = new TtyFilterInputStream(process.getInputStream(), modes);
         err = new TtyFilterInputStream(process.getErrorStream(), modes);
         in = new TtyFilterOutputStream(process.getOutputStream(), err, modes);
-
-        /*String commandG = "hi";
-        in.write(commandG.getBytes(), 0, commandG.length());
-        in.flush();*/
     }
 
     protected Map<String, String> resolveShellEnvironment(Map<String, String> env) {

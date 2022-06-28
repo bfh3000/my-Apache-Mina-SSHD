@@ -1,4 +1,4 @@
-package testMain;
+package beforeMySample;
 
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;
@@ -9,7 +9,6 @@ import org.apache.sshd.common.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.EnumSet;

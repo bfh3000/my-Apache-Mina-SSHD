@@ -1,11 +1,10 @@
-package core;
+package coreDirectTarget;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;
 import org.apache.sshd.client.channel.ClientChannelEvent;
-import org.apache.sshd.client.future.AuthFuture;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.channel.Channel;
 

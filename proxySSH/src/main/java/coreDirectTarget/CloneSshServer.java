@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package core;
+package coreDirectTarget;
 
+import coreOneByOne.InteractiveShellFactory;
 import org.apache.sshd.common.Closeable;
 import org.apache.sshd.common.Factory;
 import org.apache.sshd.common.PropertyResolverUtils;
@@ -67,7 +68,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * injection mechanism (such as the Spring framework) or programmatically. Basic setup is usually done using the
  * {@link #setUpDefaultServer()} method, which will known ciphers, macs, channels, etc... Besides this basic setup, a
  * few things have to be manually configured such as the port number, {@link Factory}, the
- * {@link org.apache.sshd.common.keyprovider.KeyPairProvider} and the {@link PasswordAuthenticator}.
+ * {@link KeyPairProvider} and the {@link PasswordAuthenticator}.
  * </p>
  *
  * <p>
@@ -94,7 +95,7 @@ public class CloneSshServer extends AbstractFactoryManager implements ServerFact
     protected int port;
 
     private ServerProxyAcceptor proxyAcceptor;
-    private InteractiveShellFactory shellFactory;
+    private coreOneByOne.InteractiveShellFactory shellFactory;
     private SessionFactory sessionFactory;
     private CommandFactory commandFactory;
     private List<? extends SubsystemFactory> subsystemFactories;
@@ -152,7 +153,7 @@ public class CloneSshServer extends AbstractFactoryManager implements ServerFact
     }
 
     @Override
-    public InteractiveShellFactory getShellFactory() {
+    public coreOneByOne.InteractiveShellFactory getShellFactory() {
         return shellFactory;
     }
 
