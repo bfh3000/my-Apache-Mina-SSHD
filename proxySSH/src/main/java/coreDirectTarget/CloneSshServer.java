@@ -18,7 +18,6 @@
  */
 package coreDirectTarget;
 
-import coreOneByOne.InteractiveShellFactory;
 import org.apache.sshd.common.Closeable;
 import org.apache.sshd.common.Factory;
 import org.apache.sshd.common.PropertyResolverUtils;
@@ -95,7 +94,7 @@ public class CloneSshServer extends AbstractFactoryManager implements ServerFact
     protected int port;
 
     private ServerProxyAcceptor proxyAcceptor;
-    private coreOneByOne.InteractiveShellFactory shellFactory;
+    private InteractiveShellFactory shellFactory;
     private SessionFactory sessionFactory;
     private CommandFactory commandFactory;
     private List<? extends SubsystemFactory> subsystemFactories;
@@ -153,7 +152,7 @@ public class CloneSshServer extends AbstractFactoryManager implements ServerFact
     }
 
     @Override
-    public coreOneByOne.InteractiveShellFactory getShellFactory() {
+    public InteractiveShellFactory getShellFactory() {
         return shellFactory;
     }
 

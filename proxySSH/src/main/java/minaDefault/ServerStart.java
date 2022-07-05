@@ -1,6 +1,6 @@
 package minaDefault;
 
-import coreOneByOne.InteractiveShellFactory;
+import coreDirectTarget.InteractiveShellFactory;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.AsyncAuthException;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;

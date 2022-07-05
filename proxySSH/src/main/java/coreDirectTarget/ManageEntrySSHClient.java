@@ -14,7 +14,7 @@ import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
 
-public class StartSSHClient{
+public class ManageEntrySSHClient extends Thread {
     private static Logger log = LogManager.getLogger();
 
     /**
@@ -47,7 +47,7 @@ public class StartSSHClient{
         return this.responseStream;
     }
 
-    StartSSHClient(String destIP, String username, String password){
+    ManageEntrySSHClient(String destIP, String username, String password){
         this.DEST_IP = destIP;
         this.USER_NAME = username;
         this.PASSWORD = password;
@@ -55,7 +55,7 @@ public class StartSSHClient{
 
     public void create(){
         //Start Client
-        client = SshClient.setUpDefaultClient();
+        client=SshClient.setUpDefaultClient();
         client.start();
 
         //Create Client Session
@@ -83,15 +83,9 @@ public class StartSSHClient{
             throw new RuntimeException(e);
         }
         channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED),TimeUnit.SECONDS.toMillis(3));
+
+
     };
-
-
-//        while(!session.getSessionState().equals(ClientSession.ClientSessionEvent.CLOSED)) {
-//            Thread.sleep(1000);
-//            channel.getInvertedIn().write(("date"+"\n").getBytes());
-//            channel.getInvertedIn().flush();
-//            System.out.println(new String(responseStream.toByteArray()));
-//        }
 }
 
 

@@ -1,4 +1,4 @@
-package coreOneByOne;
+package coreDirectTarget;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +10,7 @@ import org.apache.sshd.server.session.ServerSession;
 
 import java.io.IOException;
 
-public class StartSSHServerRe {
+public class ManageEntrySSHServer {
 
     private static Logger log = LogManager.getLogger();
     /*private SshServer sshd;
@@ -18,9 +18,9 @@ public class StartSSHServerRe {
         return sshd;
     }*/
 
-    public CloneSshServerRe sshd;
+    public CloneSshServer sshd;
 
-    public CloneSshServerRe getSshd() {
+    public CloneSshServer getSshd() {
         return sshd;
     }
 
@@ -34,11 +34,9 @@ public class StartSSHServerRe {
 
 
     public void startListen() throws IOException {
-        sshd = CloneSshServerRe.setUpDefaultServer();
+        sshd = CloneSshServer.setUpDefaultServer();
         sshd.setShellFactory(new InteractiveShellFactory()); //내꺼
 
-//        SshServer sshd = SshServer.setUpDefaultServer();
-//        sshd.setShellFactory(new ProcessShellFactory("cmd.exe", "/K", "pwd")); // 기존 코드
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
         sshd.setHost("192.168.5.171");
         sshd.setPort(2022);
@@ -49,24 +47,21 @@ public class StartSSHServerRe {
                     public boolean authenticate(String username, String password, ServerSession session) throws PasswordChangeRequiredException, AsyncAuthException {
 
                         // C12345678 9자리
-//                        if(username.substring(0, 9).equals("C12345678")){
-//                            TARGET_REMOTE_IP = "192.168.5.102";
-//                            USERNAME = "root";
-//                            PASSWORD = "1234";
-//                        }
-//                        else if(username.substring(0, 9).equals("C11111111")){
-//                            TARGET_REMOTE_IP = "192.168.0.201";
-//                            USERNAME = "root";
-//                            PASSWORD = "201sac201";
-//                        }
-//
-//                        ShellFactory tmp = session.getFactoryManager().getShellFactory();
-//                        session.getFactoryManager().addSessionListener();
+                        if(username.substring(0, 9).equals("C12345678")){
+                            TARGET_REMOTE_IP = "192.168.5.102";
+                            USERNAME = "root";
+                            PASSWORD = "1234";
+                        }
+                        else if(username.substring(0, 9).equals("C11111111")){
+                            TARGET_REMOTE_IP = "192.168.0.201";
+                            USERNAME = "root";
+                            PASSWORD = "201sac201";
+                        }
 
-//                        CustomShellFactory2 shellFactory = new CustomShellFactory2();
-//                        shellFactory.setClient(client);
-//                        sshd.setShellFactory(shellFactory);
+                        ManageEntrySSHClient client = new ManageEntrySSHClient(TARGET_REMOTE_IP, USERNAME, PASSWORD);
+                        client.create();
 
+                        sshd.setShellFactory(new InteractiveShellFactory());
                         return true;
                     }
                 }

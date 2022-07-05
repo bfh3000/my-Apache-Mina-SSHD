@@ -37,6 +37,8 @@ public class InteractiveShell implements InvertedShell {
     private TtyFilterInputStream out;
     private TtyFilterInputStream err;
 
+
+
     public InteractiveShell(ChannelSession channel){
         this.channelSession = channel;
         command.add("cmd.exe");
