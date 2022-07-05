@@ -10,6 +10,7 @@ import org.apache.sshd.common.channel.Channel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
@@ -24,28 +25,28 @@ public class ManageEntrySSHClient extends Thread {
     public static String DEST_IP = "";
     public static String USER_NAME = "";
     public static String PASSWORD = "";
-
-    public SshClient client;
-    public ClientSession session;
-    public ClientChannel channel;
-    ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
     ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
 
-    public SshClient getClient() {
-        return client;
-    }
+    //get
+    public SshClient client;
+    public SshClient getClient() {return client;}
 
-    public ClientSession getSession() {
-        return session;
-    }
+    //get
+    public ClientSession session;
+    public ClientSession getSession() {return session;}
 
-    public ClientChannel getChannel() {
-        return channel;
-    }
+    //get
+    public ClientChannel channel;
+    public ClientChannel getChannel() {return channel;}
 
-    public ByteArrayOutputStream getResponseStream() {
-        return this.responseStream;
-    }
+    //get
+    ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
+    public ByteArrayOutputStream getResponseStream() {return this.responseStream;}
+
+    //get, set
+    public InteractiveShell intershell;
+    public void setIntershell(InteractiveShell intershell) {this.intershell = intershell;}
+    public InteractiveShell getIntershell() {return intershell;}
 
     ManageEntrySSHClient(String destIP, String username, String password){
         this.DEST_IP = destIP;
@@ -83,9 +84,38 @@ public class ManageEntrySSHClient extends Thread {
             throw new RuntimeException(e);
         }
         channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED),TimeUnit.SECONDS.toMillis(3));
-
-
     };
+
+    @Override
+    public void run() {
+        while (client.isOpen()){
+            if(responseStream.size() > 0){
+                log.debug(new String(responseStream.toByteArray(), StandardCharsets.UTF_8));
+                if(intershell != null){
+                    try {
+                        intershell.getInputStream().write(responseStream.toByteArray());
+                        responseStream.flush();
+                        responseStream.reset();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void close() {
+        if (this.isAlive() == false && client.isClosed()) {
+            this.client.stop();
+            Thread.interrupted();
+        }
+    }
 }
 
 

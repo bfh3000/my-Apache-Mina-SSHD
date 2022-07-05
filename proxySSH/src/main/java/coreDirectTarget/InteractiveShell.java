@@ -5,8 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.sshd.common.channel.PtyMode;
 import org.apache.sshd.common.util.GenericUtils;
 import org.apache.sshd.common.util.MapEntryUtils;
-import org.apache.sshd.common.util.ValidateUtils;
-import org.apache.sshd.common.util.io.IoUtils;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.channel.PuttyRequestHandler;
@@ -15,9 +13,7 @@ import org.apache.sshd.server.shell.InvertedShell;
 import org.apache.sshd.server.shell.TtyFilterInputStream;
 import org.apache.sshd.server.shell.TtyFilterOutputStream;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,23 +27,27 @@ public class InteractiveShell implements InvertedShell {
     
     private String cmdValue;
     private ServerSession session;
-    private ChannelSession channelSession;
-    private Process process;
+    private ChannelSession serverChannel;
+
+    private ManageEntrySSHClient manageEntrySSHClient;
+
     private TtyFilterOutputStream in;
     private TtyFilterInputStream out;
     private TtyFilterInputStream err;
 
+    private byte[] outbuf = new byte[8192];
+    private byte[] errbuf = new byte[8192];
+    private ByteArrayInputStream rawout = new ByteArrayInputStream(outbuf);
+    private ByteArrayOutputStream rawin = new ByteArrayOutputStream();
+    private ByteArrayInputStream rawerr = new ByteArrayInputStream(errbuf);
 
-
-    public InteractiveShell(ChannelSession channel){
-        this.channelSession = channel;
-        command.add("cmd.exe");
-        command.add("/K");
-        command.add("ipconfig");
+    public InteractiveShell(ChannelSession serverChannel, ManageEntrySSHClient manageEntrySSHClient){
+        this.serverChannel = serverChannel;
+        this.manageEntrySSHClient = manageEntrySSHClient;
     }
     @Override
     public ChannelSession getServerChannelSession() {
-        return channelSession;
+        return serverChannel;
     }
 
     @Override
@@ -58,14 +58,15 @@ public class InteractiveShell implements InvertedShell {
     @Override
     public void setSession(ServerSession session) {
         this.session = Objects.requireNonNull(session, "No server session");
-        ValidateUtils.checkTrue(process == null, "Session set after process started");
     }
 
 
 
     @Override
     public void start(ChannelSession channel, Environment env) throws IOException {
-        this.channelSession = channel;
+        this.serverChannel = channel;
+
+        manageEntrySSHClient.getChannel().getInvertedIn();
 
         Map<String, String> varsMap = resolveShellEnvironment(env.getEnv());
         for (int i = 0; i < command.size(); i++) {
@@ -76,7 +77,7 @@ public class InteractiveShell implements InvertedShell {
                 cmdValue = GenericUtils.join(command, ' ');
             }
         }
-
+        
         ProcessBuilder builder = new ProcessBuilder(command);
         if (MapEntryUtils.size(varsMap) > 0) {
             try {
@@ -92,11 +93,10 @@ public class InteractiveShell implements InvertedShell {
                     channel, builder.command(), builder.environment());
         }
 
-        process = builder.start();
         Map<PtyMode, ?> modes = resolveShellTtyOptions(env.getPtyModes());
-        out = new TtyFilterInputStream(process.getInputStream(), modes);
-        err = new TtyFilterInputStream(process.getErrorStream(), modes);
-        in = new TtyFilterOutputStream(process.getOutputStream(), err, modes);
+        out = new TtyFilterInputStream(rawout, modes);
+        err = new TtyFilterInputStream(rawerr, modes);
+        in = new TtyFilterOutputStream(rawin, out, modes);
     }
 
     protected Map<String, String> resolveShellEnvironment(Map<String, String> env) {
@@ -129,37 +129,17 @@ public class InteractiveShell implements InvertedShell {
 
     @Override
     public boolean isAlive() {
-        return process.isAlive();
+        return manageEntrySSHClient.isAlive();
     }
 
     @Override
     public int exitValue() {
-        if (isAlive()) {
-            try {
-                return process.waitFor();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return process.exitValue();
-        }
+        return 0;
     }
 
     @Override
     public void destroy(ChannelSession channel) {
-        // NOTE !!! DO NOT NULL-IFY THE PROCESS SINCE "exitValue" is called subsequently
-        boolean debugEnabled = log.isDebugEnabled();
-        if (process != null) {
-            if (debugEnabled) {
-                log.debug("destroy({}) Destroy process for '{}'", channel, cmdValue);
-            }
-            process.destroy();
-        }
-
-        IOException e = IoUtils.closeQuietly(getInputStream(), getOutputStream(), getErrorStream());
-        if (e != null) {
-
-        }
+        manageEntrySSHClient.close();
     }
 
     @Override

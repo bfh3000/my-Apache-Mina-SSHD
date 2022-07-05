@@ -19,7 +19,7 @@ public class ServerStart {
         sshd.setPort(2022);
 
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-        sshd.setShellFactory(new InteractiveShellFactory()); //내꺼
+//        sshd.setShellFactory(new InteractiveShellFactory()); //내꺼
 //        sshd.setShellFactory(new ProcessShellFactory("cmd.exe", "/K", "ipconfig")); // 기존 코드
         sshd.setPasswordAuthenticator(
                 new PasswordAuthenticator() {

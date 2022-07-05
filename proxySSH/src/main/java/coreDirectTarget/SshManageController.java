@@ -5,15 +5,18 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-public class SshManagerController extends Thread {
+public class SshManageController extends Thread {
 
     private static Logger log = LogManager.getLogger();
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        ManageEntrySSHServer sshd = new ManageEntrySSHServer();
-        sshd.startListen();
+        ManageEntrySSHServer manageEntrySSHServer = new ManageEntrySSHServer();
+        manageEntrySSHServer.startListen();
 
+        while(!manageEntrySSHServer.getSshd().isClosed()){
+            Thread.sleep(500000);
+        }
 
 
         /*StartSSHServerRe s = new StartSSHServerRe();

@@ -31,7 +31,7 @@ public class CustomShell2 extends AbstractLoggingBean implements InvertedShell {
     private TtyFilterInputStream err;
     private ClientDaemon2 client;
     private OutputStream cin;
-    private ByteArrayOutputStream cout;
+//    private ByteArrayOutputStream cout;
 
     private byte[] outbuf = new byte[8192];
     private byte[] errbuf = new byte[8192];
@@ -42,7 +42,7 @@ public class CustomShell2 extends AbstractLoggingBean implements InvertedShell {
     public CustomShell2(ClientDaemon2 client) {
         this.client = client;
         this.cin = client.channel.getInvertedIn();
-        this.cout = client.out;
+//        this.cout = client.out;
         this.client.setShell(this);
     }
 
