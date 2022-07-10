@@ -90,7 +90,11 @@ public class ManageEntrySSHClient extends Thread {
     public void run() {
         while (client.isOpen()){
             if(responseStream.size() > 0){
+                System.out.println();
+                System.out.println("Client Message");
+                System.out.println();
                 log.debug(new String(responseStream.toByteArray(), StandardCharsets.UTF_8));
+                System.out.println();
                 if(intershell != null){
                     try {
                         intershell.getInputStream().write(responseStream.toByteArray());

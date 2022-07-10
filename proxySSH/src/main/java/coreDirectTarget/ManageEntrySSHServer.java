@@ -47,18 +47,23 @@ public class ManageEntrySSHServer {
                     boolean result = false;
 
                     // C12345678 9자리
-                    if(username.substring(0, 9).equals("C12345678")){
-                        TARGET_REMOTE_IP = "192.168.5.102";
-                        USERNAME = "root";
-                        PASSWORD = "1234";
-                        result = true;
-                    }
-                    else if(username.substring(0, 9).equals("C11111111")){
-                        TARGET_REMOTE_IP = "192.168.0.201";
-                        USERNAME = "root";
-                        PASSWORD = "201sac201";
-                        result = true;
-                    }
+//                    if(username.substring(0, 9).equals("C12345678")){
+//                        TARGET_REMOTE_IP = "192.168.5.102";
+//                        USERNAME = "root";
+//                        PASSWORD = "1234";
+//                        result = true;
+//                    }
+//                    else if(username.substring(0, 9).equals("C11111111")){
+//                        TARGET_REMOTE_IP = "192.168.0.201";
+//                        USERNAME = "root";
+//                        PASSWORD = "201sac201";
+//                        result = true;
+//                    }
+
+                    TARGET_REMOTE_IP = "192.168.5.102";
+                    USERNAME = "root";
+                    PASSWORD = "1234";
+                    result = true;
 
                     ManageEntrySSHClient client = new ManageEntrySSHClient(TARGET_REMOTE_IP, USERNAME, PASSWORD);
                     client.create();

@@ -6,6 +6,7 @@ import org.apache.sshd.common.channel.PtyMode;
 import org.apache.sshd.common.util.GenericUtils;
 import org.apache.sshd.common.util.MapEntryUtils;
 import org.apache.sshd.server.Environment;
+import org.apache.sshd.server.channel.ChannelDataReceiver;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.channel.PuttyRequestHandler;
 import org.apache.sshd.server.session.ServerSession;
@@ -14,10 +15,8 @@ import org.apache.sshd.server.shell.TtyFilterInputStream;
 import org.apache.sshd.server.shell.TtyFilterOutputStream;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class InteractiveShell implements InvertedShell {
     private static Logger log = LogManager.getLogger();
@@ -66,37 +65,32 @@ public class InteractiveShell implements InvertedShell {
     public void start(ChannelSession channel, Environment env) throws IOException {
         this.serverChannel = channel;
 
-        manageEntrySSHClient.getChannel().getInvertedIn();
-
-        Map<String, String> varsMap = resolveShellEnvironment(env.getEnv());
-        for (int i = 0; i < command.size(); i++) {
-            String cmd = command.get(i);
-            if ("$USER".equals(cmd)) {
-                cmd = varsMap.get("USER");
-                command.set(i, cmd);
-                cmdValue = GenericUtils.join(command, ' ');
-            }
-        }
-        
-        ProcessBuilder builder = new ProcessBuilder(command);
-        if (MapEntryUtils.size(varsMap) > 0) {
-            try {
-                Map<String, String> procEnv = builder.environment();
-                procEnv.putAll(varsMap);
-            } catch (Exception e) {
-
-            }
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("start({}): command='{}', env={}",
-                    channel, builder.command(), builder.environment());
-        }
-
         Map<PtyMode, ?> modes = resolveShellTtyOptions(env.getPtyModes());
         out = new TtyFilterInputStream(rawout, modes);
         err = new TtyFilterInputStream(rawerr, modes);
         in = new TtyFilterOutputStream(rawin, out, modes);
+
+        channel.setDataReceiver(new ChannelDataReceiver() {
+            @Override
+            public int data(ChannelSession channel, byte[] buf, int start, int len) throws IOException {
+                String stringified = new String(Arrays.copyOfRange(buf, start, start + len));
+                String hex = HexFormat.ofDelimiter("").formatHex(stringified.getBytes(StandardCharsets.UTF_8));
+                String msg = new String(Arrays.copyOfRange(buf, start, start + len));
+                System.out.println();
+                log.info("Terminal Input DATA: " + msg);
+                System.out.println();
+
+                manageEntrySSHClient.getChannel().getInvertedIn().write(stringified.getBytes(StandardCharsets.UTF_8));
+                manageEntrySSHClient.getChannel().getInvertedIn().flush();
+
+                return 0;
+            }
+
+            @Override
+            public void close() throws IOException {
+            }
+        });
+
     }
 
     protected Map<String, String> resolveShellEnvironment(Map<String, String> env) {
