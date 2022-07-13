@@ -1,4 +1,4 @@
-package importProxy2st;
+package sample.importProxy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
 
-public class ClientDaemon2 implements Runnable {
-    private static final Logger logger = LogManager.getLogger(ClientDaemon2.class);
+public class ClientDaemon implements Runnable {
+    private static final Logger logger = LogManager.getLogger(ClientDaemon.class);
     public SshClient client;
     public ClientSession session;
     public AuthFuture auth;
@@ -27,24 +27,24 @@ public class ClientDaemon2 implements Runnable {
     public ByteArrayInputStream in = new ByteArrayInputStream(buf);
     public ByteArrayOutputStream out = new ByteArrayOutputStream();
     public ByteArrayOutputStream err = new ByteArrayOutputStream();
-    public CustomShell2 shell;
+    public CustomShell shell;
 
-    public void setShell(CustomShell2 shell) {
+    public void setShell(CustomShell shell) {
         this.shell = shell;
     }
 
-    public void create(String destIP, String username, String passwd) throws IOException {
+    public void create() throws IOException {
         client = SshClient.setUpDefaultClient();
         client.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE);
         client.start();
 
         ConnectFuture conSync = client
-            .connect(destIP+":22")
+            .connect("192.168.5.102:22")
             .verify(5000);
 
         session = conSync.getSession();
-        session.setUsername(username);
-        session.addPasswordIdentity(passwd);
+        session.setUsername("root");
+        session.addPasswordIdentity("1234");
 
         auth = session
             .auth()
@@ -59,7 +59,7 @@ public class ClientDaemon2 implements Runnable {
         channel.setOut(out);
         channel.setErr(err);
 
-        channel.open().verify(5000) ;
+        channel.open().verify(5000);
         channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED), 5000);
 
         new Thread(this).start();
@@ -70,8 +70,7 @@ public class ClientDaemon2 implements Runnable {
         while (this.client != null && this.client.isOpen()) {
             try {
                 if (0 < out.size()) {
-                    String msg = new String(out.toByteArray(), StandardCharsets.UTF_8);
-                    logger.info(" >>>>>>>> OUTPUT: ");
+                    logger.info(" >>>>>>>> OUTPUT: " + new String(out.toByteArray(), StandardCharsets.UTF_8));
 
                     if (this.shell != null) {
                         shell.getInputStream().write(out.toByteArray());

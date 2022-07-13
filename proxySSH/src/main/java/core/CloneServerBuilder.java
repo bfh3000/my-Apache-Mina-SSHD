@@ -1,4 +1,4 @@
-package coreDirectTarget;
+package core;
 
 import org.apache.sshd.common.BaseBuilder;
 import org.apache.sshd.common.NamedFactory;

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package coreDirectTarget;
+package core;
 
 import org.apache.sshd.common.Closeable;
 import org.apache.sshd.common.Factory;

@@ -1,5 +1,4 @@
-/*
-package importProxy;
+package sample.importProxy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ServerDaemon {
-    private static final Logger logger = LogManager.getLogger(importProxy.ServerDaemon2.class);
+    private static final Logger logger = LogManager.getLogger(ServerDaemon.class);
     private static int step = 0;
 
     private static class Daemon extends Thread {
@@ -56,14 +55,14 @@ public class ServerDaemon {
                     iosvc.setIoServiceEventListener(new IoServiceEventListener() {
                         @Override
                         public void connectionAccepted(IoAcceptor acceptor, SocketAddress local, SocketAddress remote, SocketAddress service) throws IOException {
-                            logger.info(String.format(" ---------------- %d. connectionAccepted", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. connectionAccepted", ++(ServerDaemon.step)));
                             IoServiceEventListener.super.connectionAccepted(acceptor, local, remote, service);
                         }
 
                         @Override
                         public void abortAcceptedConnection(IoAcceptor acceptor, SocketAddress local,
                                                             SocketAddress remote, SocketAddress service, Throwable reason) throws IOException {
-                            logger.info(String.format(" ---------------- %d. abortAcceptedConnection", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. abortAcceptedConnection", ++(ServerDaemon.step)));
                             IoServiceEventListener.super.abortAcceptedConnection(acceptor, local, remote, service, reason);
                         }
 
@@ -71,54 +70,54 @@ public class ServerDaemon {
                         public void abortEstablishedConnection(IoConnector connector, SocketAddress local,
                                                                AttributeRepository context, SocketAddress remote, Throwable reason)
                                 throws IOException {
-                            logger.info(String.format(" ---------------- %d. abortEstablishedConnection", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. abortEstablishedConnection", ++(ServerDaemon.step)));
                             IoServiceEventListener.super.abortEstablishedConnection(connector, local, context, remote, reason);
                         }
 
                         @Override
                         public void connectionEstablished(IoConnector connector, SocketAddress local,
                                                           AttributeRepository context, SocketAddress remote) throws IOException {
-                            logger.info(String.format(" ---------------- %d. connectionEstablished", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. connectionEstablished", ++(ServerDaemon.step)));
                         }
                     });
 
                     session.setReservedSessionMessagesHandler(new ReservedSessionMessagesHandler() {
                         @Override
                         public void handleDebugMessage(Session session, Buffer buffer) throws Exception {
-                            logger.info(String.format(" ---------------- %d. handleDebugMessage", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. handleDebugMessage", ++(ServerDaemon.step)));
                             ReservedSessionMessagesHandler.super.handleDebugMessage(session, buffer);
                         }
 
                         @Override
                         public void handleIgnoreMessage(Session session, Buffer buffer) throws Exception {
-                            logger.info(String.format(" ---------------- %d. handleIgnoreMessage", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. handleIgnoreMessage", ++(ServerDaemon.step)));
                             ReservedSessionMessagesHandler.super.handleIgnoreMessage(session, buffer);
                         }
 
                         @Override
                         public boolean handleUnimplementedMessage(Session session, int cmd, Buffer buffer)
                                 throws Exception {
-                            logger.info(String.format(" ---------------- %d. handleUnimplementedMessage", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. handleUnimplementedMessage", ++(ServerDaemon.step)));
                             return ReservedSessionMessagesHandler.super.handleUnimplementedMessage(session, cmd, buffer);
                         }
 
                         @Override
                         public IoWriteFuture sendIdentification(Session session, String version,
                                                                 List<String> extraLines) throws Exception {
-                            logger.info(String.format(" ---------------- %d. sendIdentification", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. sendIdentification", ++(ServerDaemon.step)));
                             return ReservedSessionMessagesHandler.super.sendIdentification(session, version, extraLines);
                         }
 
                         @Override
                         public IoWriteFuture sendKexInitRequest(Session session,
                                                                 Map<KexProposalOption, String> proposal, Buffer packet) throws Exception {
-                            logger.info(String.format(" ---------------- %d. sendKexInitRequest", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. sendKexInitRequest", ++(ServerDaemon.step)));
                             return ReservedSessionMessagesHandler.super.sendKexInitRequest(session, proposal, packet);
                         }
 
                         @Override
                         public boolean sendReservedHeartbeat(ConnectionService service) throws Exception {
-                            logger.info(String.format(" ---------------- %d. sendReservedHeartbeat", ++(importProxy.ServerDaemon.step)));
+                            logger.info(String.format(" ---------------- %d. sendReservedHeartbeat", ++(ServerDaemon.step)));
                             return ReservedSessionMessagesHandler.super.sendReservedHeartbeat(service);
                         }
                     });
@@ -129,19 +128,19 @@ public class ServerDaemon {
             this.sshd.addSessionListener(new SessionListener() {
                 @Override
                 public void sessionEstablished(Session session) {
-                    logger.info(String.format(" ---------------- %d. sessionEstablished", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionEstablished", ++(ServerDaemon.step)));
                     SessionListener.super.sessionEstablished(session);
                 }
 
                 @Override
                 public void sessionCreated(Session session) {
-                    logger.info(String.format(" ---------------- %d. sessionCreated", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionCreated", ++(ServerDaemon.step)));
                     SessionListener.super.sessionCreated(session);
                 }
 
                 @Override
                 public void sessionEvent(Session session, Event event) {
-                    logger.info(String.format(" ---------------- %d. sessionEvent", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionEvent", ++(ServerDaemon.step)));
                     SessionListener.super.sessionEvent(session, event);
 
                     logger.info(" ================ EVENT: " + event.toString());
@@ -153,44 +152,44 @@ public class ServerDaemon {
 
                 @Override
                 public void sessionException(Session session, Throwable t) {
-                    logger.info(String.format(" ---------------- %d. sessionException", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionException", ++(ServerDaemon.step)));
                     SessionListener.super.sessionException(session, t);
                 }
 
                 @Override
                 public void sessionPeerIdentificationSend(Session session, String version, List<String> extraLines) {
-                    logger.info(String.format(" ---------------- %d. sessionPeerIdentificationSend", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionPeerIdentificationSend", ++(ServerDaemon.step)));
                     SessionListener.super.sessionPeerIdentificationSend(session, version, extraLines);
                 }
 
                 @Override
                 public void sessionPeerIdentificationLine(Session session, String line, List<String> extraLines) {
-                    logger.info(String.format(" ---------------- %d. sessionPeerIdentificationLine", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionPeerIdentificationLine", ++(ServerDaemon.step)));
                     SessionListener.super.sessionPeerIdentificationLine(session, line, extraLines);
                 }
 
                 @Override
                 public void sessionPeerIdentificationReceived(Session session, String version, List<String> extraLines) {
-                    logger.info(String.format(" ---------------- %d. sessionPeerIdentificationReceived", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionPeerIdentificationReceived", ++(ServerDaemon.step)));
                     SessionListener.super.sessionPeerIdentificationReceived(session, version, extraLines);
                 }
 
                 @Override
                 public void sessionDisconnect(Session session, int reason, String msg, String language, boolean initiator) {
-                    logger.info(String.format(" ---------------- %d. sessionDisconnect", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionDisconnect", ++(ServerDaemon.step)));
                     SessionListener.super.sessionDisconnect(session, reason, msg, language, initiator);
                 }
 
                 @Override
                 public void sessionClosed(Session session) {
-                    logger.info(String.format(" ---------------- %d. sessionClosed", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionClosed", ++(ServerDaemon.step)));
                     SessionListener.super.sessionClosed(session);
                 }
 
                 @Override
                 public void sessionNegotiationStart(Session session, Map<KexProposalOption, String> clientProposal,
                                                     Map<KexProposalOption, String> serverProposal) {
-                    logger.info(String.format(" ---------------- %d. sessionNegotiationStart", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionNegotiationStart", ++(ServerDaemon.step)));
                     SessionListener.super.sessionNegotiationStart(session, clientProposal, serverProposal);
                 }
 
@@ -198,13 +197,13 @@ public class ServerDaemon {
                 public void sessionNegotiationEnd(Session session, Map<KexProposalOption, String> clientProposal,
                                                   Map<KexProposalOption, String> serverProposal, Map<KexProposalOption, String> negotiatedOptions,
                                                   Throwable reason) {
-                    logger.info(String.format(" ---------------- %d. sessionNegotiationEnd", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionNegotiationEnd", ++(ServerDaemon.step)));
                     SessionListener.super.sessionNegotiationEnd(session, clientProposal, serverProposal, negotiatedOptions, reason);
                 }
 
                 @Override
                 public void sessionNegotiationOptionsCreated(Session session, Map<KexProposalOption, String> proposal) {
-                    logger.info(String.format(" ---------------- %d. sessionNegotiationOptionsCreated", ++(importProxy.ServerDaemon.step)));
+                    logger.info(String.format(" ---------------- %d. sessionNegotiationOptionsCreated", ++(ServerDaemon.step)));
                     SessionListener.super.sessionNegotiationOptionsCreated(session, proposal);
                 }
             });
@@ -250,4 +249,3 @@ public class ServerDaemon {
         }
     }
 }
-*/

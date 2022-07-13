@@ -1,4 +1,4 @@
-package importProxy2st;
+package sample.importProxy2st;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

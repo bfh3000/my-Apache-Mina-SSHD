@@ -1,4 +1,4 @@
-package coreDirectTarget;
+package core.pty;
 
 import org.apache.sshd.common.channel.PtyChannelConfigurationHolder;
 import org.apache.sshd.common.channel.PtyMode;

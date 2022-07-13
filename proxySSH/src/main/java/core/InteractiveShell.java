@@ -1,12 +1,10 @@
-package coreDirectTarget;
+package core;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sshd.common.channel.PtyMode;
 import org.apache.sshd.common.util.GenericUtils;
-import org.apache.sshd.common.util.MapEntryUtils;
 import org.apache.sshd.server.Environment;
-import org.apache.sshd.server.StandardEnvironment;
 import org.apache.sshd.server.channel.ChannelDataReceiver;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.channel.PuttyRequestHandler;
@@ -65,7 +63,6 @@ public class InteractiveShell implements InvertedShell {
     @Override
     public void start(ChannelSession channel, Environment env) throws IOException {
         this.serverChannel = channel;
-        serverChannel.getEnvironment().set("TERM", "xterm");
 
         Map<PtyMode, ?> modes = resolveShellTtyOptions(serverChannel.getEnvironment().getPtyModes());
         out = new TtyFilterInputStream(rawout, modes);
@@ -102,7 +99,8 @@ public class InteractiveShell implements InvertedShell {
     // for some reason these modes provide best results BOTH with Linux SSH client and PUTTY
     protected Map<PtyMode, Integer> resolveShellTtyOptions(Map<PtyMode, Integer> modes) {
         if (PuttyRequestHandler.isPuttyClient(getServerSession())) {
-            return PuttyShellHandler.resolveShellTtyOptions(modes);
+//            return PuttyShellHandler.resolveShellTtyOptions(modes);
+            return PuttyRequestHandler.resolveShellTtyOptions(modes);
         } else {
             return modes;
         }

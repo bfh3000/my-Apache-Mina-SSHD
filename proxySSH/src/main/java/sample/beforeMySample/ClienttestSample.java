@@ -1,4 +1,4 @@
-package beforeMySample;
+package sample.beforeMySample;
 
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;

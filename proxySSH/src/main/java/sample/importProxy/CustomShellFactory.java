@@ -1,8 +1,7 @@
-package importProxy2st;
+package sample.importProxy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.sshd.common.Factory;
 import org.apache.sshd.common.util.GenericUtils;
 import org.apache.sshd.common.util.ValidateUtils;
 import org.apache.sshd.common.util.logging.AbstractLoggingBean;
@@ -16,38 +15,24 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * A {@link Factory} of {@link Command} that will create a new process and bridge the streams.
- *
- * @author <a href="mailto:dev@mina.apache.org">Apache MINA SSHD Project</a>
- */
-public class CustomShellFactory2 extends AbstractLoggingBean implements ShellFactory {
-    private static final Logger logger = LogManager.getLogger(CustomShellFactory2.class);
+
+public class CustomShellFactory extends AbstractLoggingBean implements ShellFactory {
+    private static final Logger logger = LogManager.getLogger(CustomShellFactory.class);
 
     private String command;
     private List<String> elements;
     public InvertedShell _shell;
-    public ClientDaemon2 _client;
+    public ClientDaemon _client;
 
-    public CustomShellFactory2() {
-    }
-
-    public void setClient(ClientDaemon2 client) {
+    public CustomShellFactory(ClientDaemon client) {
         this._client = client;
     }
 
-
-    /**
-     * @return The original unparsed raw command
-     */
 
     public String getCommand() {
         return command;
     }
 
-    /**
-     * @return The parsed command elements
-     */
     public List<String> getElements() {
         return elements;
     }
@@ -69,6 +54,6 @@ public class CustomShellFactory2 extends AbstractLoggingBean implements ShellFac
     }
 
     protected InvertedShell createInvertedShell(ChannelSession channel) {
-        return new CustomShell2(this._client);
+        return new CustomShell(this._client);
     }
 }

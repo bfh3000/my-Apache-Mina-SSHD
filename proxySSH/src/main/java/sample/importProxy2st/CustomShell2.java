@@ -1,6 +1,5 @@
-/*
 
-package importProxy;
+package sample.importProxy2st;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,17 +21,17 @@ import java.util.HexFormat;
 import java.util.Map;
 import java.util.Objects;
 
-public class CustomShell extends AbstractLoggingBean implements InvertedShell {
-    private static final Logger logger = LogManager.getLogger(CustomShell.class);
+public class CustomShell2 extends AbstractLoggingBean implements InvertedShell {
+    private static final Logger logger = LogManager.getLogger(CustomShell2.class);
 
     private ServerSession session;
     private ChannelSession channelSession;
     private TtyFilterOutputStream in;
     private TtyFilterInputStream out;
     private TtyFilterInputStream err;
-    private ClientDaemon client;
+    private ClientDaemon2 client;
     private OutputStream cin;
-    private ByteArrayOutputStream cout;
+//    private ByteArrayOutputStream cout;
 
     private byte[] outbuf = new byte[8192];
     private byte[] errbuf = new byte[8192];
@@ -40,10 +39,10 @@ public class CustomShell extends AbstractLoggingBean implements InvertedShell {
     private ByteArrayOutputStream rawin = new ByteArrayOutputStream();
     private ByteArrayInputStream rawerr = new ByteArrayInputStream(errbuf);
 
-    public CustomShell(ClientDaemon client) {
+    public CustomShell2(ClientDaemon2 client) {
         this.client = client;
         this.cin = client.channel.getInvertedIn();
-        this.cout = client.out;
+//        this.cout = client.out;
         this.client.setShell(this);
     }
 
@@ -76,7 +75,8 @@ public class CustomShell extends AbstractLoggingBean implements InvertedShell {
             public int data(ChannelSession channel, byte[] buf, int start, int len) throws IOException {
                 String stringified = new String(Arrays.copyOfRange(buf, start, start + len));
                 String hex = HexFormat.ofDelimiter(" ").formatHex(stringified.getBytes(StandardCharsets.UTF_8));
-                logger.info(" <<<<<<<< DATA: " + new String(Arrays.copyOfRange(buf, start, start + len)) + " (" + hex + ")", StandardCharsets.UTF_8);
+                String msg = new String(Arrays.copyOfRange(buf, start, start + len));
+                logger.info(" <<<<<<<< DATA: " + msg);
 
                 cin.write(stringified.getBytes(StandardCharsets.UTF_8));
                 cin.flush();
@@ -132,4 +132,4 @@ public class CustomShell extends AbstractLoggingBean implements InvertedShell {
     public void destroy(ChannelSession channel) {
         this.client.stop();
     }
-}*/
+}

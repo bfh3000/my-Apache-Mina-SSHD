@@ -1,5 +1,6 @@
-package coreDirectTarget;
+package core.main;
 
+import core.ManageEntrySSHServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,7 +18,6 @@ public class SshManageController extends Thread {
         while(!manageEntrySSHServer.getSshd().isClosed()){
             Thread.sleep(500000);
         }
-
 
         /*StartSSHServerRe s = new StartSSHServerRe();
         s.startListen();

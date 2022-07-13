@@ -1,20 +1,17 @@
-package coreDirectTarget;
+package core;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sshd.client.SshClient;
-import org.apache.sshd.client.channel.ChannelExec;
 import org.apache.sshd.client.channel.ClientChannel;
 import org.apache.sshd.client.channel.ClientChannelEvent;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.channel.Channel;
-import org.apache.sshd.common.channel.PtyChannelConfiguration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -74,9 +71,9 @@ public class ManageEntrySSHClient extends Thread {
 
         //Create Client Channel
         try {
-//            channel = session.createChannel(Channel.CHANNEL_SHELL);
+            channel = session.createChannel(Channel.CHANNEL_SHELL);
 //            Map<String, ?> env =
-            channel = session.createShellChannel(new PtyChannelConfigurationSet(), null);
+//            channel = session.createShellChannel(new PtyChannelConfigurationSet(), null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
