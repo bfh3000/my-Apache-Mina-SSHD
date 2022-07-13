@@ -3,15 +3,18 @@ package coreDirectTarget;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.channel.ChannelExec;
 import org.apache.sshd.client.channel.ClientChannel;
 import org.apache.sshd.client.channel.ClientChannelEvent;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.channel.Channel;
+import org.apache.sshd.common.channel.PtyChannelConfiguration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -54,24 +57,27 @@ public class ManageEntrySSHClient extends Thread {
         this.PASSWORD = password;
     }
 
-    public void create(){
+    public void create() {
         //Start Client
-        client=SshClient.setUpDefaultClient();
+        client = SshClient.setUpDefaultClient();
         client.start();
 
         //Create Client Session
-        try{
-            session=client.connect(USER_NAME, DEST_IP,22).verify(60,TimeUnit.SECONDS).getSession();
+        try {
+            session = client.connect(USER_NAME, DEST_IP, 22).verify(60, TimeUnit.SECONDS).getSession();
             session.addPasswordIdentity(PASSWORD);
-            session.auth().verify(60,TimeUnit.SECONDS);
-        }catch(IOException e){
+            session.auth().verify(60, TimeUnit.SECONDS);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+
         //Create Client Channel
-        try{
-            channel = session.createChannel(Channel.CHANNEL_SHELL);
-        }catch(IOException e){
+        try {
+//            channel = session.createChannel(Channel.CHANNEL_SHELL);
+//            Map<String, ?> env =
+            channel = session.createShellChannel(new PtyChannelConfigurationSet(), null);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -79,13 +85,21 @@ public class ManageEntrySSHClient extends Thread {
         channel.setOut(responseStream);
         channel.setErr(errorStream);
         try {
-            channel.open().verify(60,TimeUnit.SECONDS);
+            channel.open().verify(60, TimeUnit.SECONDS);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED),TimeUnit.SECONDS.toMillis(3));
-    };
 
+        channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED), TimeUnit.SECONDS.toMillis(3));
+
+//        try (ChannelExec shell = session.createExecChannel("my super duper command")) {
+//            shell.setEnv("TERM", "xterm");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+
+
+    }
     @Override
     public void run() {
         while (client.isOpen()){

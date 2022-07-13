@@ -59,7 +59,7 @@ public class ClientDaemon2 implements Runnable {
         channel.setOut(out);
         channel.setErr(err);
 
-        channel.open().verify(5000);
+        channel.open().verify(5000) ;
         channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED), 5000);
 
         new Thread(this).start();
