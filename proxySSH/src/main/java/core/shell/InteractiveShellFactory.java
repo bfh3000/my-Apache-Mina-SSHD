@@ -1,5 +1,6 @@
-package core;
+package core.shell;
 
+import core.client.ManageEntrySSHClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sshd.server.channel.ChannelSession;

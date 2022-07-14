@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package core;
+package core.pty;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -44,9 +44,7 @@ public class PuttyShellHandler extends AbstractChannelRequestHandler {
     public static final String REQUEST_SUFFIX = "@putty.projects.tartarus.org";
 
     public static final Set<PtyMode> PUTTY_OPTIONS
-//            = Collections.unmodifiableSet(EnumSet.of(PtyMode.ECHO, PtyMode.IGNCR, PtyMode.ONLCR));
-            = Collections.unmodifiableSet(EnumSet.of(PtyMode.ECHO, PtyMode.ICRNL, PtyMode.ONLCR));
-
+            = Collections.unmodifiableSet(EnumSet.of(PtyMode.ECHO, PtyMode.IGNCR, PtyMode.ONLCR, PtyMode.ICANON));
     public static final PuttyShellHandler INSTANCE = new PuttyShellHandler();
 
     public PuttyShellHandler() {

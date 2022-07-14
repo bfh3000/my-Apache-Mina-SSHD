@@ -1,5 +1,7 @@
-package core;
+package core.client;
 
+import core.pty.PtyChannelConfigurationSet;
+import core.shell.InteractiveShell;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sshd.client.SshClient;
@@ -7,11 +9,16 @@ import org.apache.sshd.client.channel.ClientChannel;
 import org.apache.sshd.client.channel.ClientChannelEvent;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.channel.Channel;
+import org.apache.sshd.common.channel.PtyMode;
+import org.apache.sshd.common.util.MapEntryUtils;
+import org.apache.sshd.server.shell.TtyFilterInputStream;
+import org.apache.sshd.server.shell.TtyFilterOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -48,7 +55,7 @@ public class ManageEntrySSHClient extends Thread {
     public void setIntershell(InteractiveShell intershell) {this.intershell = intershell;}
     public InteractiveShell getIntershell() {return intershell;}
 
-    ManageEntrySSHClient(String destIP, String username, String password){
+    public ManageEntrySSHClient(String destIP, String username, String password){
         this.DEST_IP = destIP;
         this.USER_NAME = username;
         this.PASSWORD = password;
@@ -71,9 +78,8 @@ public class ManageEntrySSHClient extends Thread {
 
         //Create Client Channel
         try {
-            channel = session.createChannel(Channel.CHANNEL_SHELL);
-//            Map<String, ?> env =
-//            channel = session.createShellChannel(new PtyChannelConfigurationSet(), null);
+//            channel = session.createChannel(Channel.CHANNEL_SHELL);
+            channel = session.createShellChannel(new PtyChannelConfigurationSet(), null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -88,13 +94,6 @@ public class ManageEntrySSHClient extends Thread {
         }
 
         channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED), TimeUnit.SECONDS.toMillis(3));
-
-//        try (ChannelExec shell = session.createExecChannel("my super duper command")) {
-//            shell.setEnv("TERM", "xterm");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
 
     }
     @Override

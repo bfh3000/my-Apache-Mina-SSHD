@@ -1,4 +1,4 @@
-package core;
+package core.server;
 
 import org.apache.sshd.common.BaseBuilder;
 import org.apache.sshd.common.NamedFactory;

@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package core;
+package core.server;
 
+import core.shell.InteractiveShellFactory;
 import org.apache.sshd.common.Closeable;
 import org.apache.sshd.common.Factory;
 import org.apache.sshd.common.PropertyResolverUtils;

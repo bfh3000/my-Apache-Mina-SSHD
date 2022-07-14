@@ -1,6 +1,6 @@
 package core.main;
 
-import core.ManageEntrySSHServer;
+import core.server.ManageEntrySSHServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

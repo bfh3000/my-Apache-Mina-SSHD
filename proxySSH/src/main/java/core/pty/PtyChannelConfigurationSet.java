@@ -24,7 +24,7 @@ public class PtyChannelConfigurationSet implements PtyChannelConfigurationHolder
             .put(PtyMode.ECHOE, 1)
             .put(PtyMode.ECHOK, 1)
             .put(PtyMode.ECHONL, 0)
-            .put(PtyMode.NOFLSH, 0)
+            .put(PtyMode.NOFLSH, 1)
             .immutable();
 
     @Override
@@ -54,6 +54,6 @@ public class PtyChannelConfigurationSet implements PtyChannelConfigurationHolder
 
     @Override
     public Map<PtyMode, Integer> getPtyModes() {
-        return null;
+        return DEFAULT_PTY_MODES;
     }
 }

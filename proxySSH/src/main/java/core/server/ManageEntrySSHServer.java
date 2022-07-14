@@ -1,5 +1,7 @@
-package core;
+package core.server;
 
+import core.client.ManageEntrySSHClient;
+import core.shell.InteractiveShellFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sshd.server.auth.AsyncAuthException;
@@ -46,7 +48,7 @@ public class ManageEntrySSHServer {
 
                     boolean result = false;
 
-                    // C12345678 9자리
+                    // C12345678 9
 //                    if(username.substring(0, 9).equals("C12345678")){
 //                        TARGET_REMOTE_IP = "192.168.5.102";
 //                        USERNAME = "root";

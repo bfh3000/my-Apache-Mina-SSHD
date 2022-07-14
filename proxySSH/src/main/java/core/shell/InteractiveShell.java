@@ -1,5 +1,7 @@
-package core;
+package core.shell;
 
+import core.client.ManageEntrySSHClient;
+import core.pty.PuttyShellHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sshd.common.channel.PtyMode;
@@ -99,8 +101,8 @@ public class InteractiveShell implements InvertedShell {
     // for some reason these modes provide best results BOTH with Linux SSH client and PUTTY
     protected Map<PtyMode, Integer> resolveShellTtyOptions(Map<PtyMode, Integer> modes) {
         if (PuttyRequestHandler.isPuttyClient(getServerSession())) {
-//            return PuttyShellHandler.resolveShellTtyOptions(modes);
-            return PuttyRequestHandler.resolveShellTtyOptions(modes);
+            return PuttyShellHandler.resolveShellTtyOptions(modes);
+//            return PuttyRequestHandler.resolveShellTtyOptions(modes);
         } else {
             return modes;
         }
