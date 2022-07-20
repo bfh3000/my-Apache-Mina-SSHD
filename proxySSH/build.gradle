@@ -2,6 +2,24 @@ plugins {
     id 'java'
 }
 
+jar{
+    manifest {
+        attributes 'Main-Class': 'core.main.LinuxSshServer'
+    }
+
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 group 'org.example'
 version '1.0-SNAPSHOT'
 
@@ -32,6 +50,7 @@ dependencies {
     implementation 'org.bouncycastle:bcpg-jdk15on:1.70'
     implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
     implementation 'tomcat:tomcat-apr:5.5.23'
+
 }
 
 test {

@@ -18,10 +18,10 @@ public class ReceiveThread extends Thread {
             String receiveString;
             while (true) {
                 receiveString = tmpbuf.readUTF();
-                System.out.println("상대방 : " + receiveString);
+                System.out.println("OtehrPeople : " + receiveString);
             }
         } catch (SocketException e1) {
-            System.out.println("상대방 연결이 종료되었습니다.");
+            System.out.println("OtehrPeople Exit");
         } catch (IOException e2) {
             e2.printStackTrace();
         }

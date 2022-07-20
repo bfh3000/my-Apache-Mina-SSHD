@@ -1,4 +1,4 @@
-package sample.defaultCode;
+package core.main;
 
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.AsyncAuthException;
@@ -6,20 +6,20 @@ import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.ServerSession;
-import org.apache.sshd.server.shell.ProcessShellFactory;
+import org.apache.sshd.server.shell.InteractiveProcessShellFactory;
 
 import java.io.IOException;
 
-public class ServerStart {
-    public static void main(String[] args) throws IOException, InterruptedException, IllegalArgumentException {
+public class LinuxSshServer {
+    public static void main(String[] args) throws InterruptedException, IOException {
         SshServer sshd = SshServer.setUpDefaultServer();
 
-        sshd.setHost("192.168.5.171");
+        sshd.setHost("192.168.5.201");
         sshd.setPort(2022);
 
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-//        sshd.setShellFactory(new InteractiveShellFactory()); //
-        sshd.setShellFactory(new ProcessShellFactory("cmd.exe", "/K", "")); //
+        sshd.setShellFactory(new InteractiveProcessShellFactory());
+//        sshd.setShellFactory(new ProcessShellFactory("/bin/sh", "-c", "ls"));
         sshd.setPasswordAuthenticator(
                 new PasswordAuthenticator() {
                     @Override
@@ -32,9 +32,8 @@ public class ServerStart {
 
         sshd.start();
 
-        while(true){
-            Thread.sleep(5000);
+        while(!sshd.isClosed()){
+            Thread.sleep(500000);
         }
-
     }
 }

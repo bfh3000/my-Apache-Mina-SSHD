@@ -78,8 +78,8 @@ public class ManageEntrySSHClient extends Thread {
 
         //Create Client Channel
         try {
-//            channel = session.createChannel(Channel.CHANNEL_SHELL);
-            channel = session.createShellChannel(new PtyChannelConfigurationSet(), null);
+            channel = session.createChannel(Channel.CHANNEL_SHELL);
+//            channel = session.createShellChannel(new PtyChannelConfigurationSet(), null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -108,6 +108,7 @@ public class ManageEntrySSHClient extends Thread {
                 if(intershell != null){
                     try {
                         intershell.getInputStream().write(responseStream.toByteArray());
+                        intershell.getInputStream().flush();
                         responseStream.flush();
                         responseStream.reset();
                     } catch (IOException e) {

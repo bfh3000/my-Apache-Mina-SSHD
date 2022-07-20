@@ -37,8 +37,8 @@ public class InteractiveShell implements InvertedShell {
 
     private byte[] outbuf = new byte[8192];
     private byte[] errbuf = new byte[8192];
-    private ByteArrayInputStream rawout = new ByteArrayInputStream(outbuf);
     private ByteArrayOutputStream rawin = new ByteArrayOutputStream();
+    private ByteArrayInputStream rawout = new ByteArrayInputStream(outbuf);
     private ByteArrayInputStream rawerr = new ByteArrayInputStream(errbuf);
 
     public InteractiveShell(ChannelSession serverChannel, ManageEntrySSHClient manageEntrySSHClient){
@@ -68,8 +68,8 @@ public class InteractiveShell implements InvertedShell {
 
         Map<PtyMode, ?> modes = resolveShellTtyOptions(serverChannel.getEnvironment().getPtyModes());
         out = new TtyFilterInputStream(rawout, modes);
-        err = new TtyFilterInputStream(rawerr, modes);
         in = new TtyFilterOutputStream(rawin, out, modes);
+        err = new TtyFilterInputStream(rawerr, modes);
 
         channel.setDataReceiver(new ChannelDataReceiver() {
             @Override

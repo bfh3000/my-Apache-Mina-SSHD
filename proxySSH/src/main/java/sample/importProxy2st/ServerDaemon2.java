@@ -30,7 +30,7 @@ public class ServerDaemon2 {
                 public boolean authenticate(String username, String password, ServerSession session)
                         throws PasswordChangeRequiredException, AsyncAuthException {
 
-                    // C12345678 9자리
+                    // C12345678 9
                     String destIP = "";
                     if(username.substring(0, 9).equals("C12345678")){
                         destIP = "192.168.5.102";
